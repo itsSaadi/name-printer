@@ -1,0 +1,144 @@
+/* Full page layout */
+.container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  margin-top: 80px;
+
+}
+
+/* Card UI */
+.card {
+  background: white;
+  padding: 40px;
+  border-radius: 18px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 680px;
+}
+
+/* Textarea */
+textarea {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  font-size: 17px;
+  outline: none;
+  resize: none;
+  background: #fafafa;
+}
+
+/* Main Buttons */
+.main-btn {
+  width: 100%;
+  margin-top: 18px;
+  padding: 14px;
+  font-size: 17px;
+  border: none;
+  border-radius: 12px;
+  background: #2c6bed;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.main-btn:hover {
+  background: #154ad6;
+}
+
+/* Mode Switch */
+.mode-switch {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.switch-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  background: #bbb;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.switch-btn.active {
+  background: #2c6bed;
+}
+
+/* Columns layout */
+.columns-wrapper {
+  display: flex;
+  gap: 20px;
+  padding-bottom: 15px;
+  overflow-x: auto;
+}
+
+.column-box {
+  min-width: 180px;
+  background: #fafafa;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+}
+
+.column-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.delete-col-btn {
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 2px 7px;
+  cursor: pointer;
+}
+
+.cell-input {
+  width: 100%;
+  margin-bottom: 6px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background: white;
+}
+
+.add-col-btn {
+  background: #2c6bed;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  margin-top: 5px;
+  cursor: pointer;
+}
+
+.add-row-btn {
+  background: #2c6bed;
+  color: white;
+  border: none;
+  padding: 8px 10px;
+  border-radius: 8px;
+  margin-top: 5px;
+  cursor: pointer;
+}
+
+/* Print Area */
+.print-area {
+  display: none;
+  margin-top: 20px;
+}
+
+.print-columns {
+  display: flex;
+  gap: 40px;
+}
+
+.print-col div {
+  margin-bottom: 6px;
+}

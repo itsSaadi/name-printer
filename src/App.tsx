@@ -1,7 +1,5 @@
 import { useState } from "react";
 import "./App.css";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
 
 export default function App() {
   const [mode, setMode] = useState("single");
@@ -45,26 +43,7 @@ export default function App() {
     newWindow.close();
   };
 
-  const handleDownload = async () => {
-    const element = document.querySelector(".print-area") as HTMLElement;
-    if (!element) return;
-
-    // Capture the element as a canvas
-    const canvas = await html2canvas(element, { scale: 2, useCORS: true });
-
-    // Convert canvas to PNG data URL
-    const imgData = canvas.toDataURL("image/png");
-
-    const pdf = new jsPDF("p", "mm", "a4");
-    const imgProps = pdf.getImageProperties(imgData);
-
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-    // Pass 'PNG' explicitly as type
-    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-    pdf.save("wedding-names.pdf");
-  };
+ 
 
 
   // ================= COLUMN HANDLERS =================

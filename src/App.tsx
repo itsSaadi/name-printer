@@ -1,11 +1,14 @@
 import { useState } from "react";
 import "./App.css";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 export default function App() {
   const [mode, setMode] = useState("single");
   const [names, setNames] = useState("");
   const [columns, setColumns] = useState([[""]]);
 
+  // ================= PRINT / DOWNLOAD =================
   const handlePrint = () => {
     const printContent = document.querySelector(".print-area")?.innerHTML;
     if (!printContent) return;
@@ -14,27 +17,57 @@ export default function App() {
     if (!newWindow) return;
 
     newWindow.document.write(`
-    <html>
-      <head>
-        <title>Print</title>
-        <style>
-          body { font-family: Montserrat, sans-serif; padding: 20px; }
-          .print-columns { display: flex; gap: 20px; }
-          .print-col { margin-right: 10px; }
-        </style>
-      </head>
-      <body>
-        ${printContent}
-      </body>
-    </html>
-  `);
+      <html>
+        <head>
+          <title>Print</title>
+          <style>
+            body { font-family: Montserrat, sans-serif; padding: 20px; }
+            .print-columns { display: flex; gap: 20px; flex-wrap: wrap; }
+            .print-col { margin-right: 20px; }
+            .print-name { 
+              border: 1px dashed #999; 
+              padding: 10px; 
+              margin: 10px; 
+              display: inline-block; 
+              min-width: 250px;
+              text-align: center;
+            }
+          </style>
+        </head>
+        <body>
+          ${printContent}
+        </body>
+      </html>
+    `);
     newWindow.document.close();
     newWindow.focus();
     newWindow.print();
     newWindow.close();
   };
 
+  const handleDownload = async () => {
+    const element = document.querySelector(".print-area") as HTMLElement;
+    if (!element) return;
 
+    // Capture the element as a canvas
+    const canvas = await html2canvas(element, { scale: 2, useCORS: true });
+
+    // Convert canvas to PNG data URL
+    const imgData = canvas.toDataURL("image/png");
+
+    const pdf = new jsPDF("p", "mm", "a4");
+    const imgProps = pdf.getImageProperties(imgData);
+
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+    // Pass 'PNG' explicitly as type
+    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+    pdf.save("wedding-names.pdf");
+  };
+
+
+  // ================= COLUMN HANDLERS =================
   const addColumn = () => setColumns([...columns, [""]]);
 
   const deleteColumn = (index: any) => {
@@ -89,10 +122,22 @@ export default function App() {
             <button onClick={handlePrint} className="main-btn">
               Print
             </button>
+            {/* <button onClick={handleDownload} className="main-btn ml-2">
+              Download PDF
+            </button> */}
           </div>
 
           <div className="print-area">
-            <pre>{names}</pre>
+            <div className="print-columns">
+              {names
+                .split("\n")
+                .filter((n) => n.trim() !== "")
+                .map((name, i) => (
+                  <div key={i} className="print-name">
+                    {name}
+                  </div>
+                ))}
+            </div>
           </div>
         </>
       )}
@@ -142,34 +187,25 @@ export default function App() {
             <button onClick={handlePrint} className="main-btn">
               Print Columns
             </button>
+            {/* <button onClick={handleDownload} className="main-btn ml-2">
+              Download PDF
+            </button> */}
           </div>
 
           <div className="print-area">
             <h2>Names (Columns):</h2>
-
             <div className="print-columns">
-              {columns.map((col, i) => (
-                <div key={i} className="print-col">
-                  {col.map((cell, r) => (
-                    <div key={r}>{cell}</div>
-                  ))}
-                </div>
-              ))}
+              {columns.map((col, i) =>
+                col.map((cell, r) => (
+                  <div key={`${i}-${r}`} className="print-name">
+                    {cell}
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </>
       )}
-
-      {/* PRINT ONLY */}
-      <style>{`
-        @media print {
-          body * { visibility: hidden; }
-          .print-area, .print-area * { visibility: visible; }
-          .print-area {
-            position: absolute; top: 0; left: 0; width: 100%; padding: 20px;
-          }
-        }
-      `}</style>
     </div>
   );
 }
